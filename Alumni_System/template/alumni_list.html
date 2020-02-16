@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+{% block title %}Alumni's List | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" align="center" style="margin-top: 25px; margin-left: 20%">
+    <nav class="navbar sticky-top navbar" style="justify-content: center">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" name="search_alumni" placeholder="Search Alumni" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </nav></div>
+
+<div class="container-fluid" style="width: 55%; margin-top: 70px">
+
+    {% if message %}
+        <h3 align="center">{{ message }}</h3>
+    {% endif %}
+
+    {% if alumnies.object_list.exists != 0 %}
+        <div class="row">
+
+        {% for alumni in alumnies %}
+            {% if forloop.counter|divisibleby:"3" %}
+                <div class="row">
+            {% endif %}
+            {% if request.user.username != alumni.user.username %}
+             <div class="col">
+                <p align="center"><img class="rounded-circle " title="{{ alumni.user.get_full_name }}" src="{{ alumni.profile_pic.url }}"  width="270px" height="270px" style="margin-bottom: 15px">
+                    <br><a href="{% url 'user_profile' alumni.user.username %}"><strong>{{ alumni.user.get_full_name }}, {{ alumni.company }}</strong></a><br>
+                {% if profile.is_alumni %}
+                {% if alumni.user.username|confirm_friend:request.user.username == 'accepted' or request.user.username|confirm_friend:alumni.user.username == 'accepted' %}
+                    <form style="align-content: center" class="form-inline"><input name="cancel_friend_id" value="{{ alumni.user.username }}" hidden>
+                 <p align="center" style="margin-left: 40%"><button type="search" class="btn btn-danger">Unfollow</button></p></form>
+
+                {% elif alumni.user.username|confirm_friend:request.user.username == 'not_accepted' %}
+                    <form style="align-content: center" class="form-inline"><input name="confirm_friend_id" value="{{ alumni.user.username }}" hidden>
+                 <p align="center" style="margin-left: 40%"><button type="search" class="btn btn-danger">Confirm Request</button></p></form>
+
+                    {% elif alumni.user.username|check_friend:request.user.username %}<form style="align-content: center" class="form-inline"><input name="friend_id" value="{{ alumni.user.username }}" hidden>
+                 <p align="center" style="margin-left: 40%"><button type="search" class="btn btn-primary">Follow</button></p></form>
+                    {% else %}
+                        <form style="align-content: center" class="form-inline"><input name="cancel_friend_id" value="{{ alumni.user.username }}" hidden>
+                 <p align="center" style="margin-left: 40%"><button type="search" class="btn btn-danger">Cancel Follow Request</button></p></form>
+                    {% endif %}{% endif %}
+                 </p>
+                 <br>
+             </div>{% endif %}
+
+            {% if forloop.counter|divisibleby:"3" %}
+                </div>
+            {% endif %}
+
+        {% endfor %}
+
+        <nav>
+          <ul class="pagination fixed-bottom justify-content-center">
+              {% if alumnies.has_previous %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ alumnies.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+
+              {% for p in alumnies.paginator.page_range %}
+                  {% if p < page_upper and page_lower <= p %}
+                    <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if alumnies.has_next %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ alumnies.next_page_number }}">Next</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              {% endif %}
+          </ul>
+        </nav>
+
+        </div>
+    {% else %}
+        <h2> No alumni found</h2>
+    {% endif %}
+
+</div>
+{% endblock %}

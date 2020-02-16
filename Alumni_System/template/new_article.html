@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Create A Post | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="width: 55%">
+    <h1>Create New Post</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+    {% if message %}
+        <div class="alert alert-danger">
+            <p align="center"><strong> {{ message }} </strong></p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}My Post | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" style="width: 55%">
+    <h3>My Post</h3>
+        {% if list_posts.object_list.exists %}
+        <div class="add-row" style="margin-top: 35px">
+            {% for post in list_posts %}
+                <div class="row">
+                    <div class="col">
+                        <img class="rounded-circle " title="{{ post.author.user.get_full_name }}" src="{{ post.images.url }}"  width="270px" height="270px" style="margin-bottom: 15px">
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'article' post.slug %}"><h4><strong>{{ post.title }}</strong></h4></a><span class="badge badge-primary" style="margin-left: 8px">
+                        {{ post.get_status_display }}</span><span style="margin-left: 8px" class="badge badge-info">View: {{ post.views }}</span><span class="badge badge-primary" style="margin-left: 8px">
+                        Like: {{ post.like }}</span><br style="margin-bottom: 23px">
+                        {{ post.post|truncatewords:60 }}<br>
+                        <form method="post" style="margin-top: 20px">{% csrf_token %}<p align="right" style="margin-right: 25px"><a href="{% url 'user_post_update' post.id %}"><button name="update_post" value="{{ post.id }}" type="button" class="btn btn-primary">Update</button></a>
+                        <a href="{% url 'article' post.slug %}"><button name="delete_post" value="{{ post.id }}" type="submit" class="btn btn-danger">Delete</button></a></p></form>
+                    </div></div>
+                <hr>
+            {% endfor %}
+        </div>
+
+            <nav>
+          <ul class="pagination fixed-bottom justify-content-center">
+              {% if list_posts.has_previous %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ list_posts.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+
+              {% for p in list_posts.paginator.page_range %}
+                  {% if p < page_upper and page_lower <= p %}
+                  <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if list_posts.has_next %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ list_posts.next_page_number }}">Next</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              {% endif %}
+          </ul>
+        </nav>
+
+        {% else %}
+            <h3 align="center">{{ message }}</h3>
+        {% endif %}
+    </div>
+
+{% endblock %}

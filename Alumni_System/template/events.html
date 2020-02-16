@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Events | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <body onLoad="$('#my-modal').modal('show');">
+
+    {% if already_registerd %}
+        <div class="modal fade" tabindex="-1" role="dialog" id="my-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Event Registeration</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Event with the same title registered already!!!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endif %}
+
+    {% if event_confirmed %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="my-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Event Registeration</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Event has been successfully registered!!!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endif %}
+
+<div class="container-fluid" style="width: 55%">
+
+    {% if message %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <p align="center"><strong> {{ message }} </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button></p>
+            </div>
+    {% endif %}
+
+    {% if profile.is_alumni %}
+    <button style="float: right;margin-bottom: 14px" data-toggle="collapse" data-target="#trigger_add_event" class="btn btn-outline-primary">Create Event</button><br>
+
+    <div id="trigger_add_event" class="collapse" style="margin-top: 5%">
+        <h2>Create an event:</h2><br>
+        <form method="post">
+            {% csrf_token %}
+            {{ event_form.as_p }}
+            <button type="submit" style="margin-bottom: 18px" class="btn btn-outline-success">Create Event</button>
+        </form>
+    <hr style="margin-top: 9px">
+    </div>
+    {% endif %}
+
+    {% if events.exists %}
+    <div class="row" style="margin-top: 5%">
+
+    {% for i in events %}
+
+        {% if forloop.counter|divisibleby:"3" %}
+        <div class="row">
+        {% endif %}
+        <div class="col">
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+      <div class="card-body">
+        <h5 class="card-title"><b>{{ i.title }}</b></h5>
+        <p class="card-text">{{ i.about }}</p>
+      </div></li>
+                <li class="list-group-item">Address: <b>{{ i.address }}</b></li>
+                <li class="list-group-item">Event on: <b>{{ i.event_on }}</b></li>
+                <li class="list-group-item">Organised by: <b>{{ i.author.user.get_full_name }}</b></li>
+      </ul>
+      <div class="card-body">
+        <p>Mobile: <a href="#" class="card-link">{{ i.mobile }}</a></p>
+        Email: <a href="#" class="card-link">{{ i.email }}</a>
+          {% if not profile.is_alumni %}
+              <hr>
+              <div style="float: right">
+                <form method="get" class="form-inline">
+                    <p align="center" style="float: right"><button name="attendee_added" value="{{ i.id }}" class="btn btn-outline-success">Attend</button></p>
+                </form></div>
+                {% endif %}
+      </div>
+    </div>
+        </div>
+        {% if forloop.counter|divisibleby:"3" %}
+        </div>
+
+            <hr style="margin-top: 40%;margin-bottom:40% ">
+        {% endif %}
+
+        <p></p>
+    {% endfor %}
+
+    </div>{% else %}<h2 align="center" style="margin-top: 10%">No Events Found!!!</h2>{% endif %}
+
+
+</div>
+{% endblock %}

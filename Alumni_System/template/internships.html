@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}Internships | {{ block.super }}{% endblock %}
+
+{% block content %}
+<body onLoad="$('#my-modal').modal('show');">
+
+    {% if already_applied %}
+        <div class="modal fade" tabindex="-1" role="dialog" id="my-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Project Fund</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    You have already registered for this internship.<br>
+                      You will get contact you if you get short-listed!!!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endif %}
+    {% if applied %}
+        <div class="modal fade" tabindex="-1" role="dialog" id="my-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Project Fund</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Your resume is uploaded successfully, {{ request.user.get_full_name }}<br>
+                      We will contact you soon, if you get short-listed!!!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endif %}
+
+    <div class="container-fluid" style="width: 55%">
+
+    <h1>Internships</h1>
+
+    {% if message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <p align="center"><strong> {{ message }} </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button></p>
+            </div>
+    {% endif %}
+    {% if profile.is_alumni %}
+    <button style="float: right" data-toggle="collapse" data-target="#trigger_add_internship" class="btn btn-outline-primary">Add Internships</button><br>
+
+    <div id="trigger_add_internship" class="collapse" style="margin-top: 5%">
+    <h2>Add Internships:</h2><br>
+        <form method="post">
+            {% csrf_token %}
+            {{ job_form.as_p }}
+            <button type="submit" class="btn btn-outline-success">Save</button>
+        </form>
+        <hr style="margin-top: 15px;margin-bottom: 15px">
+    </div>
+    {% endif %}
+        {% if jobs.object_list.exists %}
+
+            <div class="add-row" style="margin-top: 35px">
+            {% for job in jobs %}
+                <div class="row">
+                    <div class="col">
+
+                        <div class="card">
+                          <h5 class="card-header">{{ job.title }} | {{ job.organisation }}</h5>
+                          <div class="card-body">
+                                <p>Work Type: <strong>{{ job.working_type }}</strong></p>
+                                <p>Duration: <strong>{{ job.working_in }}</strong></p>
+                                <p>Stipend: <strong>{{ job.stipend }}</strong></p>
+                                <p>About: <strong>{{ job.about }}</strong></p>
+                            {% if not profile.is_alumni %}
+                            <button style="float: right" data-toggle="collapse" data-target="#{{ job.id }}" class="btn btn-outline-success">Apply</button><br>
+
+                            <div id="{{ job.id }}" class="collapse" style="margin-top: 5%">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="text" name="internship_id" value="{{ job.id }}" hidden>
+                                    {{ apply_form.as_p }}
+                                    <button style="float: right" type="submit" class="btn btn-outline-success">Upload Resume</button>
+                                </form>
+
+                            </div>{% endif %}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <hr style="margin-top: 8px;margin-bottom: 25px">
+            {% endfor %}
+            </div>
+        {% else %}
+            <h3 align="center">No Interships Found</h3>
+        {% endif %}
+
+              <nav>
+          <ul class="pagination fixed-bottom justify-content-center">
+              {% if jobs.has_previous %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ jobs.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+
+              {% for p in jobs.paginator.page_range %}
+                  {% if p < page_upper and page_lower <= p %}
+                    <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if jobs.has_next %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ jobs.next_page_number }}">Next</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              {% endif %}
+          </ul>
+        </nav>
+
+    </div>
+
+{% endblock %}

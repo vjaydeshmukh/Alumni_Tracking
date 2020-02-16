@@ -1,0 +1,105 @@
+<nav class="navbar sticky-top fixed-top navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'home' %}">Alumni's Call</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+      </li>
+
+        {% if request.user.is_authenticated %}
+            <li class="nav-item active">
+        <a class="nav-link" href="{% url 'user_logged_in' %}">Dashboard <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link" href="{% url 'alumni_list' %}">Alumni <span class="sr-only">(current)</span></a>
+      </li>
+
+    <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Mentorship
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'user_projects' %}">Projects</a>
+          <a class="dropdown-item" href="{% url 'user_internships' %}">Interships</a>
+        </div>
+      </li>
+
+            <li class="nav-item active">
+        <a class="nav-link" href="{% url 'user_events' %}">Events<span class="sr-only">(current)</span></a>
+      </li>
+        {% if profile.is_alumni %}
+        <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Blog
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'new_post' %}">Create New Post</a>
+          <a class="dropdown-item" href="{% url 'user_posts' %}">My Post</a>
+        </div></li>
+        <li class="nav-item active">
+        <a class="nav-link" href="{% url 'academic_token' %}">Academics Form<span class="sr-only">(current)</span></a>
+      </li>
+        {% endif %}
+            {% endif %}{% if profile.is_alumni or not request.user.is_authenticated %}
+        <li class="nav-item active">
+        <a class="nav-link" href="https://google.com">Donate <span class="sr-only">(current)</span></a>
+      </li>{% endif %}
+    </ul>
+        {% if request.user.is_authenticated %}
+            <div class="navbar-nav justify-content-center" style="scroll-margin-left: 20px">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" style="width: max-content" type="search" name="search" placeholder="Search Articles" aria-label="Search">
+            </form>
+            </div>
+          <ul class="navbar-nav media-right">
+
+            <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" style="margin-right: 20px" aria-expanded="false">
+          {{ request.user.get_full_name }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">{% if profile.is_alumni %}
+            <a class="dropdown-item" href="{% url 'user_profile' request.user.username %}">My Profile</a>{% endif %}
+            <a class="dropdown-item" href="{% url 'user_change_password' %}">Change Password</a>
+            <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
+        </div>
+            </li>
+            {% if profile.is_alumni %}
+            <li class="nav-item active">
+                <a href="{% url 'chat_box' %}"><i class="material-icons" style="margin-left:-6px;margin-right:6px;font-size:36px; color: white">chat</i></a>
+            </li>{% endif %}
+              <li class="nav-item active">
+              <div class="box">
+                    <div class="notifications">
+                        <i class="material-icons" style="font-size:36px; color: white">notifications</i>
+                        <span class="num">4</span>
+                        <ul class="list-group" id="notification_panel" style="float: right">
+                            {% if notify.exists %} {% for noti in notify %}
+                                <li class="list-group-item" id="notification_panel_content"><strong><a id="notilink" href="{% url 'user_profile' noti.author.user.username %}">{{ noti.author.user.get_full_name }}</a></strong> has posted <strong><a id="notilink" href="{% url 'article' noti.slug %}">{{ noti.title }}</a></strong></li>
+                          {% endfor %}
+                            {% else %}
+                                <li class="list-group-item" id="notification_panel_content">No New Post</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+          </li>
+
+          </ul>
+        {% else %}
+            <ul class="navbar-nav media-right">
+          <li class="nav-item active" style="margin-right: 8px; alignment: right; position: relative">
+                <a class="btn btn-primary my-2 my-sm-0" style="float: right" href="{% url 'user_login' %}">Login</a>
+            </li>
+            <li class="nav-item active" style="margin-right: 9px; alignment: right; position: relative">
+                <a class="btn btn-primary my-2 my-sm-0" style="float: right" href="{% url 'user_register' %}">Register</a>
+            </li>
+        </ul>
+
+        {% endif %}
+  </div>
+</nav>

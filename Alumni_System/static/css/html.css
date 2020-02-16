@@ -1,0 +1,68 @@
+html {
+    position: relative;
+    min-height: 100%;
+    overflow: scroll;
+}
+
+h1 {
+    padding-bottom: 50px;
+}
+
+#has_error {
+    text-align: center;
+}
+
+p {
+    padding: 2px;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background-color: #5cb85c;
+}
+
+.notifications .num {
+
+    position: absolute;
+    border-radius: 50%;
+    top: 2px;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    background-color: red;
+    text-align: center;
+    color: white;
+    display: none;
+}
+
+#notilink {
+    color: black;
+}
+
+#notification_panel {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    margin: 0;
+    width: 20%;
+    float: right;
+    padding: 20px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.notifications:hover #notification_panel{
+    display: block;
+}
+
+#notification_panel_content:hover {
+    background-color: #0D7BF4;
+    color: white;
+    link: black;
+}

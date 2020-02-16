@@ -1,0 +1,26 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+h1 {
+    padding-bottom: 50px;
+}
+
+#has_error {
+    text-align: center;
+}
+
+p {
+    padding: 2px;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background-color: #5cb85c;
+}

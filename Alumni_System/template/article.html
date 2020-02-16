@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" style="width: 55%;position: center">
+        <h2>{{ post.title }}</h2><br>
+        <a href="{% url 'user_profile' post.author.user.username %}"><span class="badge badge-primary" style="margin-left: 8px">
+                    {{ post.author.user.get_full_name }}</span></a><span class="badge badge-info" style="margin-left: 8px">
+                    Published: {{ post.publish_date }}</span><span class="badge badge-info" style="margin-left: 8px">Modified: {{ post.updated }}</span><br>
+        <img class="img-responsive" style="margin-top: 25px; width: 700px; height: 500px" src="{{ post.images.url }}" width="700px" height="500px"><br>
+        <h3 style="margin-top: 25px">{{ post.post }}</h3>
+
+            <form method="post">
+                {% csrf_token %}<br>
+                <div>
+                    <button style="float: left" name="liked_it" value="{{ post.id }}" type="submit" class="btn btn-primary" {% if request.user == post.author.user %}disabled{% endif %}>
+                Like <span class="badge badge-light">{{ post.like }}</span>
+                <span class="sr-only">unread messages</span>
+                </button>
+                <button data-toggle="collapse" data-target="#trigger_comments" style="float: right" type="button" class="btn btn-primary">
+                comment{{ comments|pluralize }} <span class="badge badge-light">{{ comments.count }}</span>
+                <span class="sr-only">unread messages</span>
+                </button></div>
+            </form><br>
+
+    <hr style="margin-top: 40px; margin-bottom: 10px">
+    <div id="trigger_comments" class="collapse">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Comment</button>
+    </form>
+    <hr style="margin-top: 10px; margin-bottom: 10px">
+    <div class="main-comment-section">
+    <div class="container">
+                {% for c in comments %}
+                    <blockquote class="blockquote">
+                      <p class="mb-0">{{ c.comment }}</p>
+                      <footer class="blockquote-footer">by <cite title="Source Title">{{ c.user.get_full_name }}</cite>
+                          <button style="margin-left: 5%" data-toggle="collapse" data-target="#{{ c.id }}" class="btn btn-outline-secondary">Reply</button></footer>
+
+                    </blockquote>
+
+                    <div id="{{ c.id }}" class="collapse">
+                    <div class="replied-comments container">
+
+                                {% for r in c.replies.all %}
+                                    <blockquote style="margin-left: 10%" class="blockquote">
+                                      <p class="mb-0">{{ r.comment }}</p>
+                                      <footer class="blockquote-footer">by <cite title="Source Title">{{ r.user.get_full_name }}</cite></footer>
+                                    </blockquote>
+                                {% endfor %}
+
+                                <div class="form-group row">
+                                    <form style="margin-left: 10%" method="post">
+                                        {% csrf_token %}
+                                        <input hidden name="reply_id" value="{{ c.id }}">
+                                        {{ form.as_p }}
+                                        <button type="submit" class="btn btn-info">Reply</button>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+
+                    <hr style="margin-top: 10px; margin-bottom: 10px">
+                {% endfor %}
+            </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

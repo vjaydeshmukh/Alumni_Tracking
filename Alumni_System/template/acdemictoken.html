@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Academic Forms | {{ block.super }}{% endblock %}
+
+{% block content %}
+<body onLoad="$('#my-modal').modal('show');">
+
+    {% if token_registered %}
+        <div class="modal fade" tabindex="-1" role="dialog" id="my-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Token Generated</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Hello {{ profile.user.get_full_name }}, we registered your request. <br>
+                      Your token number is <strong>{{ token_registered }}</strong>. Save this token number for further use.<br>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endif %}
+
+    <div class="container-fluid" style="width: 55%; margin-top: 70px">
+        <h3 >Generate Token</h3>
+        <form method="post" style="margin-top: 6%">
+            {% csrf_token %}
+            <label for="name">Name</label>
+            <input class="form-control" name="name" value="{{ profile.user.get_full_name }}" readonly><br style="margin-top: 6px;margin-bottom: 6px">
+            <label for="email">Email</label>
+            <input class="form-control" name="email" value="{{ profile.user.email }}" readonly><br style="margin-top: 6px;margin-bottom: 6px">
+            <label for="college">College</label>
+            <input class="form-control" name="college" value="{{ profile.college.college_name }}" readonly><br style="margin-top: 6px;margin-bottom: 6px">
+            <label for="year">Graduation Year</label>
+            <input class="form-control" name="year" value="{{ profile.graduate }}" readonly><br style="margin-top: 6px;margin-bottom: 6px">
+            <label for="form_type">Form Type</label>
+            <select name="form_type" class="form-control" required>
+              <option value="due_form">Due Form</option>
+              <option value="final_result">Final Year Result</option>
+              <option value="library_due">Library Due</option>
+            </select><br style="margin-top: 6px;margin-bottom: 6px">
+
+            <button type="submit" class="btn btn-outline-success">Get Token</button>
+        </form>
+
+    </div>
+
+{% endblock %}

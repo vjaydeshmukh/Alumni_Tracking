@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+{% load static %}
+{% load custom_filter %}
+<html>
+<head>
+    <title>{% block title %}Alumni's Call{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/html.css' %}">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/ico" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+
+ <div class="container-fluid" style="width:22%; float: right; margin-top: 16%; position: relative">
+    {% if request.path_info|get_length == 1 and notices.exists %}
+     <ul class="list-group mb-3" style="margin-top: -70%">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Public Notice</span>
+            </h4>
+                {% for notice in notices %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div class="row"><div class="col">
+                <p class="my-1">{{ notice.notice }}<span style="margin-left: 8px" class="badge badge-info">Date: {{ notice.strap }}</span></p>
+              </div></div>
+            </li>{% endfor %}
+          </ul><br><hr style="margin-top: 2%; margin-bottom: 10%">{% endif %}
+
+ {% if popular_post.exists %}
+  <ul class="list-group mb-3">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Popular Articles</span>
+            </h4>
+        {% for pop_post in popular_post %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div class="row"><div class="col">
+                <h6 class="my-0">{{ pop_post.title }}</h6>
+                  <a href="{% url 'user_profile' pop_post.author.user.username %}"><span class="badge badge-primary">{{ pop_post.author.user.get_full_name }}</span></a>
+                  <span class="badge badge-primary" style="margin-left: 3px">View: {{ pop_post.views }}</span><span style="margin-left: 3px" class="badge badge-primary">Like: {{ pop_post.like }}</span>
+              </div></div><div class="col">
+                <span class="text-muted" style="float: right"><a href="{% url 'article' pop_post.slug %}"><button class="btn btn-outline-primary">View</button></a></span></div>
+            </li>
+      {% endfor %}
+          </ul><br><hr style="margin-top: 2%; margin-bottom: 10%">{% endif %}
+ {% if new_intern.exists %}
+ <ul class="list-group mb-3">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Recent Internships</span>
+            </h4>
+        {% for intern in new_intern %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div class="row"><div class="col">
+                <h6 class="my-0">{{ intern.title }}</h6>
+                  <span class="badge badge-primary" style="margin-left: 3px">Organisation: {{ intern.organisation }}</span><span style="margin-left: 3px" class="badge badge-primary">Skills: {{ intern.skills }}</span>
+              </div></div><div class="col">
+                <span class="text-muted" style="float: right"><a href="{% url 'user_internships' %}"><button class="btn btn-outline-primary">Apply</button></a></span></div>
+            </li>
+      {% endfor %}
+          </ul><br><hr style="margin-top: 2%; margin-bottom: 10%">{% endif %}
+
+  {% if event_side.exists %}
+ <ul class="list-group mb-3">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Events</span>
+            </h4>
+        {% for event in event_side %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div class="row"><div class="col">
+                <h6 class="my-0">{{ event.title }}</h6>
+                  <span class="badge badge-primary" style="margin-left: 3px">Event on: {{ event.event_on }}</span>
+                  <span class="badge badge-primary" style="margin-left: 3px">Author: {{ event.author.user.get_full_name }}</span>
+              </div></div><div class="col">
+                <span class="text-muted" style="float: right"><a href="{% url 'user_events' %}"><button class="btn btn-outline-primary">See</button></a></span></div>
+            </li>
+      {% endfor %}
+          </ul>{% endif %}
+</div>
+
+
+
+
+
+<div class="container-fluid" style="margin-top: 5%">
+
+{% block content %}
+{% endblock %}
+</div>
+
+
+</body>
+</html>

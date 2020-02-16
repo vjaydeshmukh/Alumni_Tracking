@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Register | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" style="width: 55%">
+
+        <h1>Alumni Registeration</h1>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                <p id="has_error"><strong> {{ error }} </strong></p>
+            </div><br>
+        {% endif %}
+        <p id="has_form">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_basic.as_p }}
+                {{ form_more.as_p }}
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
+            </form>
+        </p>
+    </div>
+
+{% endblock %}

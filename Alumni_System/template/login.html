@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Login | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="width: 55%">
+
+    <h1 style="margin-bottom: 8px">Login</h1>
+    {% if message %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <p align="center"><strong> {{ message }} </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button></p>
+            </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ login_form.as_p }}
+        <button type="submit" style="margin-right: 5px" class="btn btn-success">Submit</button>
+        <button type="reset" style="margin-right: 10px; margin-left: 10px" class="btn btn-danger">Reset</button>
+        <a href="{% url 'user_recover_password' %}"><button style="margin-left: 5px" type="button" class="btn btn-info">Forget Password</button></a>
+    </form>
+
+
+</div>
+{% endblock %}

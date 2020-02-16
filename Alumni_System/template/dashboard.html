@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="width: 55%">
+
+
+    {% if not alumni.verified %}
+        <form method="post">
+            {% csrf_token %}
+            {{ otp_verify.as_p }}
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+        {% if message %}
+            <div class="alert alert-danger">
+              <p align="center"><strong> {{ message }} </strong></p>
+            </div>
+        {% endif %}
+    {% else %}
+        <h3>Articles </h3>
+        {% if message %}
+            <h4 align="center">{{ message }}</h4>
+        {% else %}
+        <div class="add-row" style="margin-top: 35px;position: relative">
+            {% for post in posts %}
+                <div class="row">
+                    <div class="col" style="position: relative">
+                        <img class="rounded-circle" title="{{ post.author.user.get_full_name }}" src="{{ post.images.url }}"  width="270px" height="270px" style="margin-bottom: 15px">
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'article' post.slug %}"><h4><strong>{{ post.title }}</strong></h4></a><a href="{% url 'user_profile' post.author.user.username %}"><span class="badge badge-primary" style="margin-left: 8px">
+                        {{ post.author.user.get_full_name }}</span></a><span style="margin-left: 8px" class="badge badge-info">View: {{ post.views }}</span><span class="badge badge-primary" style="margin-left: 8px">
+                        Like: {{ post.like }}</span><span style="margin-left: 8px" class="badge badge-info">Published: {{ post.publish_date }}</span><span style="margin-left: 8px" class="badge badge-info">Modified: {{ post.updated }}</span><br style="margin-bottom: 23px">
+                        {{ post.post|truncatewords:60 }}<br>
+                    <p align="right" style="margin-right: 25px"><a href="{% url 'article' post.slug %}"><button type="button" class="btn btn-primary">Read More</button></a></p>
+                </div>
+                </div>
+                <hr style="margin: 9px">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+                <nav>
+          <ul class="pagination fixed-bottom justify-content-center">
+              {% if posts.has_previous %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ posts.previous_page_number }}" tabindex="-1">Previous</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+              {% endif %}
+
+              {% for p in posts.paginator.page_range %}
+                  {% if p < page_upper and page_lower <= p %}
+                    <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if posts.has_next %}
+                  <li class="page-item active">
+                      <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                  </li>
+              {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              {% endif %}
+          </ul>
+        </nav>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+{% block title %}My Profile | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" style="width: 90%">
+
+    {% if edit %}
+        <form method="post" style="float: right">
+            {% csrf_token %}
+            <button class="btn btn-outline-success" name="update_profile" type="submit" value="{{ profiles.id }}">Edit Profile</button>
+        </form>
+    </div><p style="margin: 55px"></p>{% endif %}
+    <div class="container-fluid" style="width: 55%">
+
+            {% if message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <p align="center"><strong> {{ message }} </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button></p>
+            </div>
+        {% endif %}
+        {% if edit_show %}
+            {% if message_error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <p align="center"><strong> {{ message_error }} </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button></p>
+            </div>
+        {% endif %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>First name: {{ form_1.first_name }}</p>
+                <p>Last name: {{ form_1.last_name }}</p>
+                <p>Username: {{ form_1.username }}</p>
+                <p>Email ID: {{ form_1.email }}</p>
+                {{ form_2.as_p }}
+                <p>
+                <label for="upload_file">Upload files</label>
+                <input class="form-control" id="upload_file" type="file" name="upload_file" multiple>
+                <small>Upload your job related details</small></p>
+                <button type="submit" style="margin-bottom: 30px" class="btn btn-outline-success">Save</button>
+            </form>
+        {% else %}
+        <img class="rounded-circle float-left" title="{{ profiles.user.get_full_name }}" src="{{ profiles.profile_pic.url }}"  width="270px" height="270px" style="margin-bottom: 15px">
+        <div style="float: right; margin-top: 28px">
+            <p>Name: <strong>{{ profiles.user.get_full_name }}</strong></p>
+            <p>Email: <strong>{{ profiles.user.email }}</strong></p>
+            <p>Company: <strong>{{ profiles.company }}</strong></p>
+            <p>College: <strong>{{ profiles.college }}</strong></p>
+            <p>Graduated: <strong>{{ profiles.graduate }}</strong></p>
+            <p>About me: <strong>{{ profiles.about_me }}</strong></p>
+            </div><br>
+
+            {% if files.exists and profile.user == request.user %}<div style="float: left; margin-top: 7cm">
+            <hr style="margin-top: 20px; margin-bottom: 20px ">
+            <h2> Files Uploaded:</h2><br>
+                {% for file in files %}
+                    <p>{{ file.file.name| get_filename | title }}<a href="{% url 'user_download' file.id %}" ><button style="margin-left: 15px" class="btn btn-outline-success">Download</button></a>
+                    <a href="{% url 'user_delete' file.id %}" ><button style="margin-left: 15px" class="btn btn-outline-danger">Delete</button></a></p>
+                {% endfor %}</div>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

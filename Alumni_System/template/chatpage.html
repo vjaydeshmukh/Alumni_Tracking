@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+{% block title %}Message | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="container" style="width: 55%; margin-top: 70px">
+        <h3>Message</h3>
+        {% if friends.exists %}
+        <table class="table" style="margin-top: 20px; width: 100%">
+            <thead>
+                <tr>
+                    <th scope="col" style="text-align: center">Friends</th>
+                    <th scope="col" style="text-align: center">Messages</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for friend in friends %}
+
+                {% if friend.profile.user.username == request.user.username %}
+
+                    <tr>
+                        <td align="center">{{ friend.friends.user.get_full_name }}</td>
+                        <td>
+                            {% if friend.profile.user.username|list_messages:friend.friends.user.username %}
+                                <div class="container" id="message_box" style="max-height: 400px;overflow: auto; overflow-x: visible; overflow-y: auto">
+                                <ul class="list-group">
+                                    {% for msg in friend.profile.user.username|list_messages:friend.friends.user.username %}
+                                        {% if msg.sender.user.username == request.user.username %}
+                                        <li class="list-group-item" style="text-align: right">{{ msg.content }}<br>
+                                            <small>{{ msg.strap }}</small>
+                                        </li>
+                                    {% else %}
+                                        <li class="list-group-item" style="text-align: left">{{ msg.content }}<br>
+                                            <small>{{ msg.strap }}</small>
+                                        </li>
+                                    {% endif %}
+
+                                    {% endfor %}
+                                </ul></div>
+                            {% else %}
+                                    <strong style="margin-top: 10px; margin-bottom: 10px">No messages</strong>
+                                {% endif %}<div style="float: right">
+                            <form method="post">{% csrf_token %}
+                                    <input name="friend_id" value="{{ friend.friends.user.username }}" hidden>
+                                    <textarea placeholder="Enter your message...." rows="2" cols="70" name="get_message"></textarea>
+                                    <button style="margin-top: -40px" class="btn btn-success" type="submit">Send</button>
+                            </form></div>
+                        </td>
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+                        <td align="center">{{ friend.profile.user.get_full_name }}</td>
+                        <td>
+                            {% if friend.friends.user.username|list_messages:friend.profile.user.username %}
+                                <div class="container" id="message_box" style="max-height: 400px;overflow: auto; overflow-x: visible; overflow-y: auto">
+                                <ul class="list-group">
+                                {% for msg in friend.friends.user.username|list_messages:friend.profile.user.username %}
+                                    {% if msg.sender.user.username == request.user.username %}
+                                        <li class="list-group-item" style="text-align: right">{{ msg.content }}<br>
+                                            <small>{{ msg.strap }}</small>
+                                        </li>
+                                    {% else %}
+                                        <li class="list-group-item" style="text-align: left">{{ msg.content }}<br>
+                                            <small>{{ msg.strap }}</small>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul></div>
+                                {% else %}
+                                    <strong style="margin-top: 10px; margin-bottom: 10px">No messages</strong>
+                                {% endif %}<div style="float: right">
+                                    <form method="post">{% csrf_token %}
+                                    <textarea placeholder="Enter your message...." rows="2" cols="70" name="get_message"></textarea>
+                                    <input name="friend_id" value="{{ friend.profile.user.username }}" hidden>
+                                    <button style="margin-top: -40px" class="btn btn-success" type="submit">Send</button>
+                                </form></div>
+                        </td>
+                    </tr>
+
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        </table>
+        {% else %}
+            <p align="center">Make friends first!!!</p>
+    {% endif %}
+    </div>
+
+{% endblock %}
