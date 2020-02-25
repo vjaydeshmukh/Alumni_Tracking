@@ -6,6 +6,9 @@ from django.utils.text import slugify
 
 
 class college(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user.is_staff = True
+    user.is_superuser = False
     college_name = models.CharField(max_length=100, blank=False)
     college_email = models.EmailField(blank=False)
     college_website = models.URLField(blank=False)
