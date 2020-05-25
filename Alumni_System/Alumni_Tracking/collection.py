@@ -34,10 +34,10 @@ def sendmail(email, otp):
     connect = SMTP('smtp.gmail.com', 587)
     connect.ehlo()
     connect.starttls()
-    connect.login(str('rrohitanand3336@gmail.com'), str(settings.MAIL_KEY))
+    connect.login(str('rrohitanand@gmail.com'), str(settings.MAIL_KEY))
     content = 'Subject: ' + str('OTP for login portal') + '\n\n' + str('Your six digit OTP is ') + str(
         otp) + '\n\n' + 'Regards\nAlumni\'s Call'
-    connect.sendmail(str('rrohitanand3336@gmail.com'), str(email), content)
+    connect.sendmail(str('rrohitanand@gmail.com'), str(email), content)
     connect.quit()
 
 
@@ -51,10 +51,10 @@ def recover_mail(email, password):
     connect = SMTP('smtp.gmail.com', 587)
     connect.ehlo()
     connect.starttls()
-    connect.login(str('rrohitanand3336@gmail.com'), str(settings.MAIL_KEY))
+    connect.login(str('rrohitanand@gmail.com'), str(settings.MAIL_KEY))
     content = 'Subject: ' + str('Change Password') + '\n\n' + str('Your Temporary password is ') + str(
         password) + '\n\n' + str('Please login and change your temporary password') + '\n\n' + 'Regards\nAlumni\'s Call'
-    connect.sendmail(str('rrohitanand3336@gmail.com'), str(email), content)
+    connect.sendmail(str('rrohitanand@gmail.com'), str(email), content)
     connect.quit()
 
 
@@ -62,11 +62,11 @@ def token_mail(email, token_num):
     connect = SMTP('smtp.gmail.com', 587)
     connect.ehlo()
     connect.starttls()
-    connect.login(str('rrohitanand3336@gmail.com'), str(settings.MAIL_KEY))
+    connect.login(str('rrohitanand@gmail.com'), str(settings.MAIL_KEY))
     content = 'Subject: ' + str('Token Number') + '\n\n' + str(
         'Your token has been generated. Your token number is ') + str(
         token_num) + '\n\n' + 'Regards\nAlumni\'s Call'
-    connect.sendmail(str('rrohitanand3336@gmail.com'), str(email), content)
+    connect.sendmail(str('rrohitanand@gmail.com'), str(email), content)
     connect.quit()
 
 
