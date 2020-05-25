@@ -1,4 +1,4 @@
-# Alumni_Tracking
+# Alumni Tracking
 It is an alumni portal for university where different college manage their alumni. Here alumni can register or login, write or edit blogs, create event or internships and can fund projects where students can only view these or apply for internships. Alumni also can make friends there and chat as well. And can do many things.
 
 Features:
