@@ -12,4 +12,5 @@ Features:
 8)	College can publish public notice which can be access by the alumni and student as well.
 
 Note:
-Verification system is not working right now, because I removed the credentials for security reasons. If you want to use generate key from Gmail for your email id and paste that key to the keys.txt (in the alumni system folder In the second line). And replace all email with your email id in collection.py (In Alumni Tracking Folder) 
+Verification system is not working right now, because I removed the credentials for security reasons. If you want to use generate key from Gmail for your email id and paste that key to the keys.txt (in the alumni system folder In the second line). And replace all email with your email id in collection.py (In Alumni Tracking Folder
+Run :python3 manage.py runserver
